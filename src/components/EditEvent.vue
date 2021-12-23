@@ -1,7 +1,11 @@
 <template>
     <div class="d-flex justify-center py-8">
-        <v-card class="py-8 mt-8 px-16" color="transparent" elevation="8">
+        <v-progress-circular v-if="loading" indeterminate color="#4983a6" />
+        <v-card v-if="!loading" class="py-8 mt-8 px-16" color="transparent" elevation="8" :loading="true">
             <v-form v-model="valid">
+            <template slot="progress">
+                <v-progress-linear color="red" indeterminate></v-progress-linear>
+            </template>
             <v-alert
                 v-if="alertSucces"
                 dense
@@ -27,6 +31,7 @@
             <v-card-actions>
                 <v-spacer />
                 <v-btn class="white--text" color="orange" :disabled="!valid" @click="editEvent">Edit Event</v-btn>
+                <v-progress-circular v-if="loadingEvent" indeterminate color="orange" />
             </v-card-actions>
             </v-form>
         </v-card>
@@ -37,6 +42,8 @@ export default {
     data () {
         return {
             valid: false,
+            loading: true,
+            loadingEvent: false,
             alertSucces: false,
             alertFail: false,
             event: {
@@ -61,6 +68,7 @@ export default {
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
             this.axios.get(`https://localhost:44302/api/events/${this.$route.params.id}`,{ headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
+                    this.loading = false
                     this.event.eventName = response.data.data.eventName
                     this.event.date = response.data.data.eventDate.split('T')[0]
                     this.event.description = response.data.data.eventDescription
@@ -68,6 +76,7 @@ export default {
             })
         },
         editEvent() {
+            this.loadingEvent = true
             const body = {
                 eventName: this.event.eventName,
                 eventDate: this.event.date,
@@ -76,8 +85,10 @@ export default {
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
             this.axios.put(`https://localhost:44302/api/events/${this.$route.params.id}`, body ,{ headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
+                    this.loadingEvent = false
                     this.alertSucces = true
                 }else {
+                    this.loadingEvent = false
                     this.alertFail = true
                 }
             })

@@ -1,6 +1,8 @@
 <template>
     <div class="d-flex justify-center mt-8 py-8">
+        <v-progress-circular v-if="loading" indeterminate color="#4983a6" />
         <v-data-table
+            v-if="!loading"
             :headers="headers"
             :items="items"
             item-key="name"
@@ -25,6 +27,7 @@
                     <v-spacer />
                     <v-btn text @click="dialog = false">Cancel</v-btn>
                     <v-btn class="white--text" color="red" @click="deleteEvent">Delete</v-btn>
+                    <v-progress-circular v-if="loadingEvent" indeterminate color="red" />
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -35,6 +38,8 @@ export default {
     data() {
         return {
             dialog: false,
+            loading: true,
+            loadingEvent: false,
             headers: [
                 { text: 'Event Name', value: 'eventName' },
                 { text: 'Event Date', value: 'eventDate' },
@@ -57,9 +62,11 @@ export default {
             this.dialog = true
         },
         deleteEvent(){
+            this.loadingEvent = true
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
             this.axios.delete(`https://localhost:44302/api/events/${this.itemToDelete.id}`,{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
+                    this.loadingEvent = false
                     this.items = response.data.data
                 }
                 this.dialog = false
@@ -70,6 +77,7 @@ export default {
             this.axios.get('https://localhost:44302/api/events',{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.items = response.data.data
+                    this.loading = false
                 }
             })
         }

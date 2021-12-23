@@ -27,6 +27,7 @@
             <v-card-actions>
                 <v-spacer />
                 <v-btn class="white--text" color="blue" :disabled="!validAdd" @click="addEvent">Add Event</v-btn>
+                <v-progress-circular v-if="loadingEvent" indeterminate color="blue" />
             </v-card-actions>
             </v-form>
         </v-card>
@@ -37,6 +38,7 @@ export default {
     data () {
         return {
             eventName: '',
+            loadingEvent: false,
             date: '',
             description: '',
             alertSucces: false,
@@ -53,6 +55,7 @@ export default {
     },
     methods: {
         addEvent() {
+            this.loadingEvent = true
             const body = {
                 eventName: this.eventName,
                 eventDate: this.date,
@@ -61,8 +64,10 @@ export default {
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
             this.axios.post('https://localhost:44302/api/events',body ,{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
+                    this.loadingEvent = false
                     this.alertSucces = true
                 }else {
+                    this.loadingEvent = false
                     this.alertFail = true
                 }
             })
