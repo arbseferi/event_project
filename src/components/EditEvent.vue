@@ -66,7 +66,7 @@ export default {
     methods: {
         async getEventById(){
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.get(`https://localhost:44302/api/events/${this.$route.params.id}`,{ headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.get(process.env.VUE_APP_API_URL+`/events/${this.$route.params.id}`,{ headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.loading = false
                     this.event.eventName = response.data.data.eventName
@@ -83,7 +83,7 @@ export default {
                 eventDescription: this.event.description
             }
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.put(`https://localhost:44302/api/events/${this.$route.params.id}`, body ,{ headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.put(process.env.VUE_APP_API_URL+`/events/${this.$route.params.id}`, body ,{ headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.loadingEvent = false
                     this.alertSucces = true

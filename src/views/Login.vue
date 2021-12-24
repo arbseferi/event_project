@@ -171,7 +171,7 @@ export default {
       };
       this.axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
       this.axios
-        .post("https://localhost:44302/api/auth/signin", body)
+        .post(process.env.VUE_APP_API_URL+"/auth/signin", body)
         .then((response) => {
           if (response.data.statusCode === 200) {
             this.loadingLogin = false;
@@ -202,7 +202,7 @@ export default {
       };
       this.axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
       this.axios
-        .post("https://localhost:44302/api/user", body)
+        .post(process.env.VUE_APP_API_URL+"/user", body)
         .then((response) => {
           if (response.data.statusCode === 200) {
             this.loadingRegister = false;

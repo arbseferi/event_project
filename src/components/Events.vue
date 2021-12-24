@@ -64,7 +64,7 @@ export default {
         deleteEvent(){
             this.loadingEvent = true
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.delete(`https://localhost:44302/api/events/${this.itemToDelete.id}`,{headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.delete(process.env.VUE_APP_API_URL+`/events/${this.itemToDelete.id}`,{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.loadingEvent = false
                     this.items = response.data.data
@@ -74,7 +74,7 @@ export default {
         },
         getEvents(){
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.get('https://localhost:44302/api/events',{headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.get(process.env.VUE_APP_API_URL+"/events",{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.items = response.data.data
                     this.loading = false

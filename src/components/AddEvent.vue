@@ -62,7 +62,7 @@ export default {
                 eventDescription: this.description
             }
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.post('https://localhost:44302/api/events',body ,{headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.post(process.env.VUE_APP_API_URL+"api/events",body ,{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     this.loadingEvent = false
                     this.alertSucces = true

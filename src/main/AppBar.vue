@@ -19,7 +19,7 @@ export default {
     methods: {
         logout() {
             this.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-            this.axios.post('https://localhost:44302/api/auth/signout',{} ,{headers: {SessionGuid: localStorage.session}}).then(response => {
+            this.axios.post(process.env.VUE_APP_API_URL+"/auth/signout",{} ,{headers: {SessionGuid: localStorage.session}}).then(response => {
                 if(response.data.statusCode === 200){
                     localStorage.clear()
                     this.$router.push({name: 'Login'})
